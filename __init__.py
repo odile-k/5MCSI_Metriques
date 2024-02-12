@@ -29,12 +29,6 @@ def meteo():
 @app.route("/histogramme/")
 def mongraphique():
     return render_template("graphique.html")
-
-@app.route('/')
-def contact.html():
-    return render_template('contact.html') #fiche contact
-
-
   
 if __name__ == "__main__":
   app.run(debug=True)
