@@ -58,7 +58,10 @@ def commits():
         commits_per_minute[minutes] = commits_per_minute.get(minutes, 0) + 1
 
     return render_template('commits.html', commits_per_minute=commits_per_minute)
-
+  
+@app.route("/commits/")
+def commits():
+    return render_template("comits.html")
 
 ###
   
