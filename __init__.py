@@ -29,6 +29,43 @@ def meteo():
 @app.route("/histogramme/")
 def mongraphique():
     return render_template("graphique.html")
+
+###
+from flask import Flask, render_template, jsonify
+import requests
+from datetime import datetime
+
+app = Flask(__name__)
+
+# Fonction pour extraire les minutes à partir d'une chaîne de date formatée
+@app.route('/extract-minutes/<date_string>')
+def extract_minutes(date_string):
+    date_object = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%SZ')
+    minutes = date_object.minute
+    return jsonify({'minutes': minutes})
+
+# Fonction pour récupérer les commits depuis l'API GitHub et compter les commits par minute
+@app.route('/commits/')
+def commits():
+    # Récupération des données de l'API GitHub
+    url = 'https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits'
+    response = requests.get(url)
+    commits_data = response.json()
+
+    # Initialisation du dictionnaire pour stocker le nombre de commits par minute
+    commits_per_minute = {}
+
+    # Parcours des commits pour compter les commits par minute
+    for commit in commits_data:
+        date_string = commit['commit']['author']['date']
+        response = requests.get(f"http://localhost:5000/extract-minutes/{date_string}")
+        minutes = response.json()['minutes']
+        commits_per_minute[minutes] = commits_per_minute.get(minutes, 0) + 1
+
+    return render_template('commits.html', commits_per_minute=commits_per_minute)
+
+
+###
   
 if __name__ == "__main__":
   app.run(debug=True)
