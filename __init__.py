@@ -4,6 +4,7 @@ from flask import json
 from datetime import datetime
 from urllib.request import urlopen
 import sqlite3
+import requests
                                                                                                                                        
 app = Flask(__name__) 
 @app.route("/contact/")
@@ -30,12 +31,6 @@ def meteo():
 def mongraphique():
     return render_template("graphique.html")
 
-###
-from flask import Flask, render_template, jsonify
-import requests
-from datetime import datetime
-
-app = Flask(__name__)
 
 # Fonction pour extraire les minutes à partir d'une chaîne de date formatée
 @app.route('/extract-minutes/<date_string>')
