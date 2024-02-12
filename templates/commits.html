@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graphique des Commits par Minute</title>
+    <title>Graphique des Commits</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -11,32 +11,52 @@
     <canvas id="commitsChart" width="800" height="400"></canvas>
 
     <script>
-        const minutes = {{ minutes | tojson }};
-        const commitCounts = {{ commit_counts | tojson }};
+        // Fonction pour récupérer les données de commits de l'API GitHub
+        function getCommits() {
+            fetch('https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits')
+            .then(response => response.json())
+            .then(data => {
+                // Initialisation des données pour le graphique
+                let commitsPerMinute = {};
+                data.forEach(commit => {
+                    let date = new Date(commit.commit.author.date);
+                    let minutes = date.getMinutes();
+                    commitsPerMinute[minutes] = (commitsPerMinute[minutes] || 0) + 1;
+                });
 
-        var ctx = document.getElementById('commitsChart').getContext('2d');
-        var commitsChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: minutes,
-                datasets: [{
-                    label: 'Commits par Minute',
-                    data: commitCounts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
+                // Récupération des minutes et des nombres de commits
+                const minutes = Object.keys(commitsPerMinute);
+                const commitCounts = Object.values(commitsPerMinute);
+
+                // Création du graphique avec Chart.js
+                var ctx = document.getElementById('commitsChart').getContext('2d');
+                var commitsChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: minutes,
+                        datasets: [{
+                            label: 'Commits par Minute',
+                            data: commitCounts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
                         }
-                    }]
-                }
-            }
-        });
+                    }
+                });
+            });
+        }
+
+        // Appel de la fonction pour récupérer les données de commits
+        getCommits();
     </script>
 </body>
 </html>
