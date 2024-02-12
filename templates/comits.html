@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphique des Commits</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Graphique des Commits par Minute</h1>
+    <canvas id="commitsChart" width="800" height="400"></canvas>
+
+    <script>
+        // Données des commits par minute passées depuis Flask
+        const commitsPerMinute = {{ commits_per_minute | tojson }};
+
+        // Récupération des minutes et des nombres de commits
+        const minutes = Object.keys(commitsPerMinute);
+        const commitCounts = Object.values(commitsPerMinute);
+
+        // Création du graphique avec Chart.js
+        var ctx = document.getElementById('commitsChart').getContext('2d');
+        var commitsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: minutes,
+                datasets: [{
+                    label: 'Nombre de Commits',
+                    data: commitCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Minutes'
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Nombre de Commits'
+                        },
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+</body>
+</html>
