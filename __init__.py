@@ -32,7 +32,7 @@ def mongraphique():
     return render_template("graphique.html")
 
 
-###
+
 @app.route('/extract-minutes/<date_string>')
 def extract_minutes(date_string):
     date_object = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%SZ')
@@ -68,9 +68,9 @@ def generate_fake_commits():
     
     return commits_data
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
+@app.route('/commits/')
+def quantitecommits():
+  return render_template("commits.html")
 ###
 
 if __name__ == "__main__":
