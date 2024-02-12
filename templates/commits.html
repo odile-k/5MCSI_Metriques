@@ -12,20 +12,20 @@
 
     <script>
         // Données des commits par minute passées depuis Flask
-        const commitsPerMinute = {{ commits_per_minute | tojson }};
+        const commits_per_minute = {{ commits_per_minute | tojson }};
 
         // Récupération des minutes et des nombres de commits
-        const minutes = Object.keys(commitsPerMinute);
-        const commitCounts = Object.values(commitsPerMinute);
+        const minutes = Object.keys(commits_per_minute);
+        const commitCounts = Object.values(commits_per_minute);
 
         // Création du graphique avec Chart.js
         var ctx = document.getElementById('commitsChart').getContext('2d');
         var commitsChart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: minutes,
                 datasets: [{
-                    label: 'Nombre de Commits',
+                    label: 'Commits par Minute',
                     data: commitCounts,
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
@@ -34,17 +34,7 @@
             },
             options: {
                 scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Minutes'
-                        }
-                    }],
                     yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Nombre de Commits'
-                        },
                         ticks: {
                             beginAtZero: true
                         }
