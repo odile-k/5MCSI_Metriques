@@ -31,6 +31,10 @@ def meteo():
 def mongraphique():
     return render_template("graphique.html")
 
+@app.route("/histogramme/")
+def histogramme():
+    return render_template("grapique.html")
+
 @app.route('/commits/')
 def commits():
   return render_template("commits.html")
