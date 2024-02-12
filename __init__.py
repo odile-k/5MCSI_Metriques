@@ -4,6 +4,7 @@ from flask import json
 from datetime import datetime
 from urllib.request import urlopen
 import sqlite3
+import random
                                                                                                                                        
 app = Flask(__name__) 
 @app.route("/contact/")
