@@ -1,0 +1,19 @@
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    if request.method == 'POST':
+        nom = request.form['nom']
+        email = request.form['email']
+        message = request.form['message']
+        # Vous pouvez effectuer ici d'autres opérations avec les données, telles que les enregistrer dans une base de données
+        return render_template('confirmation.html', nom=nom, email=email, message=message)
+
+if __name__ == '__main__':
+    app.run(debug=True)
