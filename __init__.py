@@ -40,17 +40,13 @@ def extract_minutes(date_string):
 
 @app.route('/commits/')
 def commits():
-    url = 'https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits'
-    try:
-        with urllib.request.urlopen(url) as response:
-            data = json.loads(response.read())
-    except urllib.error.HTTPError:
-        return "Erreur lors de la récupération des données depuis l'API GitHub"
+    # Simulation de données de commits fictifs
+    commits_data = generate_fake_commits()
 
     commits_per_minute = {}
 
-    for commit in data:
-        date_string = commit['commit']['author']['date']
+    for commit in commits_data:
+        date_string = commit['date']
         minutes = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%SZ').minute
         commits_per_minute[minutes] = commits_per_minute.get(minutes, 0) + 1
 
@@ -58,6 +54,22 @@ def commits():
     commit_counts = list(commits_per_minute.values())
 
     return render_template('commits.html', minutes=minutes, commit_counts=commit_counts)
+
+def generate_fake_commits():
+    # Génération de données fictives de commits
+    commits_data = []
+    start_date = datetime.now()
+
+    for i in range(100):
+        commit_date = start_date.replace(second=0, microsecond=0)  # Ignorer les secondes et les microsecondes
+        commit_date -= timedelta(minutes=i)  # Décrémenter de i minutes pour simuler des commits au fil du temps
+        commits_data.append({'date': commit_date.isoformat()})
+    
+    return commits_data
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
 ###
 
 if __name__ == "__main__":
